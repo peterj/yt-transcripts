@@ -1,0 +1,4150 @@
+{
+  "text": "If you are using kind for your local Kubernetes development you're missing out In this video I'll go through four most common scenarios that you'll probably run into when using kind If you don't have kind installed you can follow the instructions on the website to do so Let's get started Creating a single node cluster is straightforward You run kind create cluster and that's it But what if you want to create a multi node cluster The create command supports YAML configuration where amongst other things we can configure the number of nodes in the cluster labels we want on those nodes the node image we want to use additional mount points extra port mappings and so on Here's an example of a multi node cluster configuration This configuration creates a control plane node that hosts the Kubernetes control plane and three worker nodes We're also setting labels on each node To create this we can run kind create cluster dash dash config and pass in the configuration file Once the cluster is created we can see the nodes and their labels by running kubectl get nodes dash dash show labels If you're working on an application that runs in a Kubernetes cluster you will need a Docker image and you will reference that image in your Kubernetes deployments Typically the way to do this is to build an image tag it and then push it to some container registry Then you would create your Kubernetes deployment YAML and then reference the image in there Doing this locally is kind of awkward Ideally you want to build and tag the image and then have that image immediately available for use inside the cluster So skipping push and pull from a Docker registry Kind supports this workflow and it's very easy to use There's a command called kind load Docker image that will load a locally built Docker image into the cluster I have a Docker image I build locally called my app with a tag 1 0 0 Instead of pushing this image to a registry I can load it directly into the cluster nodes by running kind load Docker image and then the name and the tag of the image If I run the command kind will take the image and load it onto all nodes in the cluster Once the images are loaded on the nodes I can refer to the image with the same name in the Kubernetes deployment YAML and everything will work fine Metal lb is a load balancer implementation for bare metal Kubernetes clusters and it gives us a nice way to expose services of type load balancer No more pending state for those services Metal lb is not part of kind but it's very easy to install and use it Once you have your kind cluster running you can install metal lb using helm So you run helm upgrade install provide the namespace name point to the metal lb repo and then the name of the controller running in our cluster Next we need to tell metal lb the IP range from which it can take IP addresses for those load balancer services We can do that with the IP address pool resource but first we have to figure out the IP range that we can use Since kind is using Docker to run the cluster it created a network called kind We can use the Docker network inspect command to get the kind command and then we'll get the subnet out from the IP address management section This subset range gives us 65 000 IP addresses we can choose from We can pick a range let's say 172 18 250 500 to 200 and that will be our IP address pool for the load balancer services We can apply the IP address pool resource and the L2 advertisement resource and then we can a Kubernetes service of type load balancer and you'll notice that we get an external IP address assigned to the service Another option we have for using local Docker images is to run a local image registry and then push the images to dad registry instead of loading them onto the nodes The website has a nice script that will create a local registry and then configure the nodes to use it First it runs the registry image as a Docker container then it creates the cluster the configuration for the cluster includes a patch that's necessary for the nodes to use the registry then it creates the configuration on each node then maps local host to the actual registry container name and finally it connects the registry container to the cluster network With the cluster and registry running we can either build or pull an image tag it using the local registry name which is local host 5001 push it to the registry and then finally refer to the images in our Kubernetes deployment yaml files",
+  "words": [
+    {
+      "word": "If",
+      "start": 0.0,
+      "end": 0.23999999463558197
+    },
+    {
+      "word": "you",
+      "start": 0.23999999463558197,
+      "end": 0.36000001430511475
+    },
+    {
+      "word": "are",
+      "start": 0.36000001430511475,
+      "end": 0.5400000214576721
+    },
+    {
+      "word": "using",
+      "start": 0.5400000214576721,
+      "end": 1.059999942779541
+    },
+    {
+      "word": "kind",
+      "start": 1.059999942779541,
+      "end": 1.2200000286102295
+    },
+    {
+      "word": "for",
+      "start": 1.2200000286102295,
+      "end": 1.7200000286102295
+    },
+    {
+      "word": "your",
+      "start": 1.7200000286102295,
+      "end": 1.9800000190734863
+    },
+    {
+      "word": "local",
+      "start": 1.9800000190734863,
+      "end": 2.359999895095825
+    },
+    {
+      "word": "Kubernetes",
+      "start": 2.359999895095825,
+      "end": 2.7799999713897705
+    },
+    {
+      "word": "development",
+      "start": 2.7799999713897705,
+      "end": 3.359999895095825
+    },
+    {
+      "word": "you're",
+      "start": 3.619999885559082,
+      "end": 3.9200000762939453
+    },
+    {
+      "word": "missing",
+      "start": 3.9200000762939453,
+      "end": 4.119999885559082
+    },
+    {
+      "word": "out",
+      "start": 4.119999885559082,
+      "end": 4.559999942779541
+    },
+    {
+      "word": "In",
+      "start": 4.820000171661377,
+      "end": 4.820000171661377
+    },
+    {
+      "word": "this",
+      "start": 4.820000171661377,
+      "end": 5.059999942779541
+    },
+    {
+      "word": "video",
+      "start": 5.059999942779541,
+      "end": 5.360000133514404
+    },
+    {
+      "word": "I'll",
+      "start": 5.380000114440918,
+      "end": 5.78000020980835
+    },
+    {
+      "word": "go",
+      "start": 5.78000020980835,
+      "end": 6.019999980926514
+    },
+    {
+      "word": "through",
+      "start": 6.019999980926514,
+      "end": 6.21999979019165
+    },
+    {
+      "word": "four",
+      "start": 6.21999979019165,
+      "end": 6.739999771118164
+    },
+    {
+      "word": "most",
+      "start": 6.739999771118164,
+      "end": 7.099999904632568
+    },
+    {
+      "word": "common",
+      "start": 7.099999904632568,
+      "end": 7.380000114440918
+    },
+    {
+      "word": "scenarios",
+      "start": 7.380000114440918,
+      "end": 7.840000152587891
+    },
+    {
+      "word": "that",
+      "start": 7.840000152587891,
+      "end": 8.180000305175781
+    },
+    {
+      "word": "you'll",
+      "start": 8.180000305175781,
+      "end": 8.479999542236328
+    },
+    {
+      "word": "probably",
+      "start": 8.479999542236328,
+      "end": 8.920000076293945
+    },
+    {
+      "word": "run",
+      "start": 8.920000076293945,
+      "end": 9.279999732971191
+    },
+    {
+      "word": "into",
+      "start": 9.279999732971191,
+      "end": 9.600000381469727
+    },
+    {
+      "word": "when",
+      "start": 9.600000381469727,
+      "end": 9.880000114440918
+    },
+    {
+      "word": "using",
+      "start": 9.880000114440918,
+      "end": 10.220000267028809
+    },
+    {
+      "word": "kind",
+      "start": 10.220000267028809,
+      "end": 10.600000381469727
+    },
+    {
+      "word": "If",
+      "start": 10.720000267028809,
+      "end": 10.9399995803833
+    },
+    {
+      "word": "you",
+      "start": 10.9399995803833,
+      "end": 11.039999961853027
+    },
+    {
+      "word": "don't",
+      "start": 11.039999961853027,
+      "end": 11.220000267028809
+    },
+    {
+      "word": "have",
+      "start": 11.220000267028809,
+      "end": 11.4399995803833
+    },
+    {
+      "word": "kind",
+      "start": 11.4399995803833,
+      "end": 11.65999984741211
+    },
+    {
+      "word": "installed",
+      "start": 11.65999984741211,
+      "end": 12.119999885559082
+    },
+    {
+      "word": "you",
+      "start": 12.220000267028809,
+      "end": 12.319999694824219
+    },
+    {
+      "word": "can",
+      "start": 12.319999694824219,
+      "end": 12.5600004196167
+    },
+    {
+      "word": "follow",
+      "start": 12.5600004196167,
+      "end": 12.699999809265137
+    },
+    {
+      "word": "the",
+      "start": 12.699999809265137,
+      "end": 13.039999961853027
+    },
+    {
+      "word": "instructions",
+      "start": 13.039999961853027,
+      "end": 13.300000190734863
+    },
+    {
+      "word": "on",
+      "start": 13.300000190734863,
+      "end": 13.720000267028809
+    },
+    {
+      "word": "the",
+      "start": 13.720000267028809,
+      "end": 13.920000076293945
+    },
+    {
+      "word": "website",
+      "start": 13.920000076293945,
+      "end": 14.180000305175781
+    },
+    {
+      "word": "to",
+      "start": 14.180000305175781,
+      "end": 14.460000038146973
+    },
+    {
+      "word": "do",
+      "start": 14.460000038146973,
+      "end": 14.680000305175781
+    },
+    {
+      "word": "so",
+      "start": 14.680000305175781,
+      "end": 14.960000038146973
+    },
+    {
+      "word": "Let's",
+      "start": 15.199999809265137,
+      "end": 15.359999656677246
+    },
+    {
+      "word": "get",
+      "start": 15.359999656677246,
+      "end": 15.579999923706055
+    },
+    {
+      "word": "started",
+      "start": 15.579999923706055,
+      "end": 16.15999984741211
+    },
+    {
+      "word": "Creating",
+      "start": 17.1200008392334,
+      "end": 20.520000457763672
+    },
+    {
+      "word": "a",
+      "start": 20.520000457763672,
+      "end": 20.920000076293945
+    },
+    {
+      "word": "single",
+      "start": 20.920000076293945,
+      "end": 21.1200008392334
+    },
+    {
+      "word": "node",
+      "start": 21.1200008392334,
+      "end": 21.3799991607666
+    },
+    {
+      "word": "cluster",
+      "start": 21.3799991607666,
+      "end": 21.700000762939453
+    },
+    {
+      "word": "is",
+      "start": 21.700000762939453,
+      "end": 22.1200008392334
+    },
+    {
+      "word": "straightforward",
+      "start": 22.1200008392334,
+      "end": 22.600000381469727
+    },
+    {
+      "word": "You",
+      "start": 22.8799991607666,
+      "end": 23.1200008392334
+    },
+    {
+      "word": "run",
+      "start": 23.1200008392334,
+      "end": 23.420000076293945
+    },
+    {
+      "word": "kind",
+      "start": 23.420000076293945,
+      "end": 23.799999237060547
+    },
+    {
+      "word": "create",
+      "start": 23.799999237060547,
+      "end": 24.040000915527344
+    },
+    {
+      "word": "cluster",
+      "start": 24.040000915527344,
+      "end": 24.440000534057617
+    },
+    {
+      "word": "and",
+      "start": 24.440000534057617,
+      "end": 24.799999237060547
+    },
+    {
+      "word": "that's",
+      "start": 24.799999237060547,
+      "end": 25.18000030517578
+    },
+    {
+      "word": "it",
+      "start": 25.18000030517578,
+      "end": 25.540000915527344
+    },
+    {
+      "word": "But",
+      "start": 25.8799991607666,
+      "end": 26.020000457763672
+    },
+    {
+      "word": "what",
+      "start": 26.020000457763672,
+      "end": 26.360000610351562
+    },
+    {
+      "word": "if",
+      "start": 26.360000610351562,
+      "end": 26.5
+    },
+    {
+      "word": "you",
+      "start": 26.5,
+      "end": 26.639999389648438
+    },
+    {
+      "word": "want",
+      "start": 26.639999389648438,
+      "end": 26.8799991607666
+    },
+    {
+      "word": "to",
+      "start": 26.8799991607666,
+      "end": 27.360000610351562
+    },
+    {
+      "word": "create",
+      "start": 27.360000610351562,
+      "end": 27.360000610351562
+    },
+    {
+      "word": "a",
+      "start": 27.360000610351562,
+      "end": 27.780000686645508
+    },
+    {
+      "word": "multi",
+      "start": 27.780000686645508,
+      "end": 28.219999313354492
+    },
+    {
+      "word": "node",
+      "start": 28.219999313354492,
+      "end": 28.3799991607666
+    },
+    {
+      "word": "cluster",
+      "start": 28.3799991607666,
+      "end": 28.81999969482422
+    },
+    {
+      "word": "The",
+      "start": 29.399999618530273,
+      "end": 29.540000915527344
+    },
+    {
+      "word": "create",
+      "start": 29.540000915527344,
+      "end": 29.920000076293945
+    },
+    {
+      "word": "command",
+      "start": 29.920000076293945,
+      "end": 30.3799991607666
+    },
+    {
+      "word": "supports",
+      "start": 30.3799991607666,
+      "end": 30.8799991607666
+    },
+    {
+      "word": "YAML",
+      "start": 30.8799991607666,
+      "end": 31.440000534057617
+    },
+    {
+      "word": "configuration",
+      "start": 31.440000534057617,
+      "end": 32.15999984741211
+    },
+    {
+      "word": "where",
+      "start": 32.7400016784668,
+      "end": 32.86000061035156
+    },
+    {
+      "word": "amongst",
+      "start": 32.86000061035156,
+      "end": 33.18000030517578
+    },
+    {
+      "word": "other",
+      "start": 33.18000030517578,
+      "end": 33.68000030517578
+    },
+    {
+      "word": "things",
+      "start": 33.68000030517578,
+      "end": 33.959999084472656
+    },
+    {
+      "word": "we",
+      "start": 34.15999984741211,
+      "end": 34.15999984741211
+    },
+    {
+      "word": "can",
+      "start": 34.15999984741211,
+      "end": 34.5
+    },
+    {
+      "word": "configure",
+      "start": 34.5,
+      "end": 34.779998779296875
+    },
+    {
+      "word": "the",
+      "start": 34.779998779296875,
+      "end": 35.119998931884766
+    },
+    {
+      "word": "number",
+      "start": 35.119998931884766,
+      "end": 35.400001525878906
+    },
+    {
+      "word": "of",
+      "start": 35.400001525878906,
+      "end": 36.02000045776367
+    },
+    {
+      "word": "nodes",
+      "start": 36.02000045776367,
+      "end": 36.02000045776367
+    },
+    {
+      "word": "in",
+      "start": 36.02000045776367,
+      "end": 36.279998779296875
+    },
+    {
+      "word": "the",
+      "start": 36.279998779296875,
+      "end": 36.68000030517578
+    },
+    {
+      "word": "cluster",
+      "start": 36.68000030517578,
+      "end": 36.68000030517578
+    },
+    {
+      "word": "labels",
+      "start": 37.58000183105469,
+      "end": 37.58000183105469
+    },
+    {
+      "word": "we",
+      "start": 37.58000183105469,
+      "end": 37.900001525878906
+    },
+    {
+      "word": "want",
+      "start": 37.900001525878906,
+      "end": 38.0
+    },
+    {
+      "word": "on",
+      "start": 38.0,
+      "end": 38.18000030517578
+    },
+    {
+      "word": "those",
+      "start": 38.18000030517578,
+      "end": 38.5
+    },
+    {
+      "word": "nodes",
+      "start": 38.5,
+      "end": 38.70000076293945
+    },
+    {
+      "word": "the",
+      "start": 39.040000915527344,
+      "end": 39.099998474121094
+    },
+    {
+      "word": "node",
+      "start": 39.099998474121094,
+      "end": 39.400001525878906
+    },
+    {
+      "word": "image",
+      "start": 39.400001525878906,
+      "end": 39.65999984741211
+    },
+    {
+      "word": "we",
+      "start": 39.65999984741211,
+      "end": 39.880001068115234
+    },
+    {
+      "word": "want",
+      "start": 39.880001068115234,
+      "end": 40.02000045776367
+    },
+    {
+      "word": "to",
+      "start": 40.02000045776367,
+      "end": 40.5
+    },
+    {
+      "word": "use",
+      "start": 40.5,
+      "end": 40.5
+    },
+    {
+      "word": "additional",
+      "start": 40.959999084472656,
+      "end": 41.15999984741211
+    },
+    {
+      "word": "mount",
+      "start": 41.15999984741211,
+      "end": 41.7400016784668
+    },
+    {
+      "word": "points",
+      "start": 41.7400016784668,
+      "end": 42.02000045776367
+    },
+    {
+      "word": "extra",
+      "start": 42.36000061035156,
+      "end": 42.619998931884766
+    },
+    {
+      "word": "port",
+      "start": 42.619998931884766,
+      "end": 42.939998626708984
+    },
+    {
+      "word": "mappings",
+      "start": 42.939998626708984,
+      "end": 43.31999969482422
+    },
+    {
+      "word": "and",
+      "start": 43.41999816894531,
+      "end": 43.720001220703125
+    },
+    {
+      "word": "so",
+      "start": 43.720001220703125,
+      "end": 43.939998626708984
+    },
+    {
+      "word": "on",
+      "start": 43.939998626708984,
+      "end": 44.2599983215332
+    },
+    {
+      "word": "Here's",
+      "start": 44.2599983215332,
+      "end": 44.5
+    },
+    {
+      "word": "an",
+      "start": 44.5,
+      "end": 44.79999923706055
+    },
+    {
+      "word": "example",
+      "start": 44.79999923706055,
+      "end": 45.119998931884766
+    },
+    {
+      "word": "of",
+      "start": 45.119998931884766,
+      "end": 45.599998474121094
+    },
+    {
+      "word": "a",
+      "start": 45.599998474121094,
+      "end": 45.86000061035156
+    },
+    {
+      "word": "multi",
+      "start": 45.86000061035156,
+      "end": 46.380001068115234
+    },
+    {
+      "word": "node",
+      "start": 46.380001068115234,
+      "end": 46.58000183105469
+    },
+    {
+      "word": "cluster",
+      "start": 46.58000183105469,
+      "end": 47.040000915527344
+    },
+    {
+      "word": "configuration",
+      "start": 47.040000915527344,
+      "end": 47.86000061035156
+    },
+    {
+      "word": "This",
+      "start": 48.060001373291016,
+      "end": 48.380001068115234
+    },
+    {
+      "word": "configuration",
+      "start": 48.380001068115234,
+      "end": 48.97999954223633
+    },
+    {
+      "word": "creates",
+      "start": 48.97999954223633,
+      "end": 49.5
+    },
+    {
+      "word": "a",
+      "start": 49.5,
+      "end": 50.040000915527344
+    },
+    {
+      "word": "control",
+      "start": 50.040000915527344,
+      "end": 50.36000061035156
+    },
+    {
+      "word": "plane",
+      "start": 50.36000061035156,
+      "end": 50.63999938964844
+    },
+    {
+      "word": "node",
+      "start": 50.63999938964844,
+      "end": 50.900001525878906
+    },
+    {
+      "word": "that",
+      "start": 50.900001525878906,
+      "end": 51.29999923706055
+    },
+    {
+      "word": "hosts",
+      "start": 51.29999923706055,
+      "end": 51.68000030517578
+    },
+    {
+      "word": "the",
+      "start": 51.68000030517578,
+      "end": 52.040000915527344
+    },
+    {
+      "word": "Kubernetes",
+      "start": 52.040000915527344,
+      "end": 52.36000061035156
+    },
+    {
+      "word": "control",
+      "start": 52.36000061035156,
+      "end": 53.060001373291016
+    },
+    {
+      "word": "plane",
+      "start": 53.060001373291016,
+      "end": 53.34000015258789
+    },
+    {
+      "word": "and",
+      "start": 53.34000015258789,
+      "end": 53.720001220703125
+    },
+    {
+      "word": "three",
+      "start": 53.720001220703125,
+      "end": 54.13999938964844
+    },
+    {
+      "word": "worker",
+      "start": 54.13999938964844,
+      "end": 54.65999984741211
+    },
+    {
+      "word": "nodes",
+      "start": 54.65999984741211,
+      "end": 55.0
+    },
+    {
+      "word": "We're",
+      "start": 55.619998931884766,
+      "end": 55.7599983215332
+    },
+    {
+      "word": "also",
+      "start": 55.7599983215332,
+      "end": 56.2400016784668
+    },
+    {
+      "word": "setting",
+      "start": 56.2400016784668,
+      "end": 56.560001373291016
+    },
+    {
+      "word": "labels",
+      "start": 56.560001373291016,
+      "end": 57.20000076293945
+    },
+    {
+      "word": "on",
+      "start": 57.20000076293945,
+      "end": 57.599998474121094
+    },
+    {
+      "word": "each",
+      "start": 57.599998474121094,
+      "end": 57.939998626708984
+    },
+    {
+      "word": "node",
+      "start": 57.939998626708984,
+      "end": 58.63999938964844
+    },
+    {
+      "word": "To",
+      "start": 58.959999084472656,
+      "end": 58.959999084472656
+    },
+    {
+      "word": "create",
+      "start": 58.959999084472656,
+      "end": 59.279998779296875
+    },
+    {
+      "word": "this",
+      "start": 59.279998779296875,
+      "end": 59.65999984741211
+    },
+    {
+      "word": "we",
+      "start": 59.880001068115234,
+      "end": 59.880001068115234
+    },
+    {
+      "word": "can",
+      "start": 59.880001068115234,
+      "end": 60.15999984741211
+    },
+    {
+      "word": "run",
+      "start": 60.15999984741211,
+      "end": 60.41999816894531
+    },
+    {
+      "word": "kind",
+      "start": 60.41999816894531,
+      "end": 60.7599983215332
+    },
+    {
+      "word": "create",
+      "start": 60.7599983215332,
+      "end": 61.099998474121094
+    },
+    {
+      "word": "cluster",
+      "start": 61.099998474121094,
+      "end": 61.540000915527344
+    },
+    {
+      "word": "dash",
+      "start": 61.540000915527344,
+      "end": 62.119998931884766
+    },
+    {
+      "word": "dash",
+      "start": 62.119998931884766,
+      "end": 62.380001068115234
+    },
+    {
+      "word": "config",
+      "start": 62.380001068115234,
+      "end": 62.81999969482422
+    },
+    {
+      "word": "and",
+      "start": 62.81999969482422,
+      "end": 63.29999923706055
+    },
+    {
+      "word": "pass",
+      "start": 63.29999923706055,
+      "end": 63.70000076293945
+    },
+    {
+      "word": "in",
+      "start": 63.70000076293945,
+      "end": 63.939998626708984
+    },
+    {
+      "word": "the",
+      "start": 63.939998626708984,
+      "end": 64.18000030517578
+    },
+    {
+      "word": "configuration",
+      "start": 64.18000030517578,
+      "end": 64.66000366210938
+    },
+    {
+      "word": "file",
+      "start": 64.66000366210938,
+      "end": 65.16000366210938
+    },
+    {
+      "word": "Once",
+      "start": 65.86000061035156,
+      "end": 65.9800033569336
+    },
+    {
+      "word": "the",
+      "start": 65.9800033569336,
+      "end": 66.41999816894531
+    },
+    {
+      "word": "cluster",
+      "start": 66.41999816894531,
+      "end": 66.41999816894531
+    },
+    {
+      "word": "is",
+      "start": 66.41999816894531,
+      "end": 66.69999694824219
+    },
+    {
+      "word": "created",
+      "start": 66.69999694824219,
+      "end": 67.0199966430664
+    },
+    {
+      "word": "we",
+      "start": 67.22000122070312,
+      "end": 67.27999877929688
+    },
+    {
+      "word": "can",
+      "start": 67.27999877929688,
+      "end": 67.45999908447266
+    },
+    {
+      "word": "see",
+      "start": 67.45999908447266,
+      "end": 67.5999984741211
+    },
+    {
+      "word": "the",
+      "start": 67.5999984741211,
+      "end": 67.80000305175781
+    },
+    {
+      "word": "nodes",
+      "start": 67.80000305175781,
+      "end": 67.9800033569336
+    },
+    {
+      "word": "and",
+      "start": 67.9800033569336,
+      "end": 68.16000366210938
+    },
+    {
+      "word": "their",
+      "start": 68.16000366210938,
+      "end": 68.5199966430664
+    },
+    {
+      "word": "labels",
+      "start": 68.5199966430664,
+      "end": 68.69999694824219
+    },
+    {
+      "word": "by",
+      "start": 68.69999694824219,
+      "end": 69.05999755859375
+    },
+    {
+      "word": "running",
+      "start": 69.05999755859375,
+      "end": 69.36000061035156
+    },
+    {
+      "word": "kubectl",
+      "start": 69.36000061035156,
+      "end": 70.26000213623047
+    },
+    {
+      "word": "get",
+      "start": 70.26000213623047,
+      "end": 70.62000274658203
+    },
+    {
+      "word": "nodes",
+      "start": 70.62000274658203,
+      "end": 70.9000015258789
+    },
+    {
+      "word": "dash",
+      "start": 70.9000015258789,
+      "end": 71.30000305175781
+    },
+    {
+      "word": "dash",
+      "start": 71.30000305175781,
+      "end": 71.54000091552734
+    },
+    {
+      "word": "show",
+      "start": 71.54000091552734,
+      "end": 72.05999755859375
+    },
+    {
+      "word": "labels",
+      "start": 72.05999755859375,
+      "end": 72.4000015258789
+    },
+    {
+      "word": "If",
+      "start": 72.58000183105469,
+      "end": 73.0999984741211
+    },
+    {
+      "word": "you're",
+      "start": 73.0999984741211,
+      "end": 73.55999755859375
+    },
+    {
+      "word": "working",
+      "start": 73.55999755859375,
+      "end": 73.55999755859375
+    },
+    {
+      "word": "on",
+      "start": 73.55999755859375,
+      "end": 73.76000213623047
+    },
+    {
+      "word": "an",
+      "start": 73.76000213623047,
+      "end": 73.9800033569336
+    },
+    {
+      "word": "application",
+      "start": 73.9800033569336,
+      "end": 74.37999725341797
+    },
+    {
+      "word": "that",
+      "start": 74.37999725341797,
+      "end": 74.83999633789062
+    },
+    {
+      "word": "runs",
+      "start": 74.83999633789062,
+      "end": 75.05999755859375
+    },
+    {
+      "word": "in",
+      "start": 75.05999755859375,
+      "end": 75.41999816894531
+    },
+    {
+      "word": "a",
+      "start": 75.41999816894531,
+      "end": 75.55999755859375
+    },
+    {
+      "word": "Kubernetes",
+      "start": 75.55999755859375,
+      "end": 75.86000061035156
+    },
+    {
+      "word": "cluster",
+      "start": 75.86000061035156,
+      "end": 76.31999969482422
+    },
+    {
+      "word": "you",
+      "start": 76.45999908447266,
+      "end": 76.76000213623047
+    },
+    {
+      "word": "will",
+      "start": 76.76000213623047,
+      "end": 76.94000244140625
+    },
+    {
+      "word": "need",
+      "start": 76.94000244140625,
+      "end": 77.16000366210938
+    },
+    {
+      "word": "a",
+      "start": 77.16000366210938,
+      "end": 77.58000183105469
+    },
+    {
+      "word": "Docker",
+      "start": 77.58000183105469,
+      "end": 77.58000183105469
+    },
+    {
+      "word": "image",
+      "start": 77.58000183105469,
+      "end": 78.04000091552734
+    },
+    {
+      "word": "and",
+      "start": 78.08000183105469,
+      "end": 78.31999969482422
+    },
+    {
+      "word": "you",
+      "start": 78.31999969482422,
+      "end": 78.58000183105469
+    },
+    {
+      "word": "will",
+      "start": 78.58000183105469,
+      "end": 78.91999816894531
+    },
+    {
+      "word": "reference",
+      "start": 78.91999816894531,
+      "end": 79.13999938964844
+    },
+    {
+      "word": "that",
+      "start": 79.13999938964844,
+      "end": 79.54000091552734
+    },
+    {
+      "word": "image",
+      "start": 79.54000091552734,
+      "end": 79.76000213623047
+    },
+    {
+      "word": "in",
+      "start": 79.76000213623047,
+      "end": 80.0
+    },
+    {
+      "word": "your",
+      "start": 80.0,
+      "end": 80.30000305175781
+    },
+    {
+      "word": "Kubernetes",
+      "start": 80.30000305175781,
+      "end": 80.69999694824219
+    },
+    {
+      "word": "deployments",
+      "start": 80.83999633789062,
+      "end": 81.44000244140625
+    },
+    {
+      "word": "Typically",
+      "start": 81.58000183105469,
+      "end": 82.04000091552734
+    },
+    {
+      "word": "the",
+      "start": 82.44000244140625,
+      "end": 82.5199966430664
+    },
+    {
+      "word": "way",
+      "start": 82.5199966430664,
+      "end": 82.77999877929688
+    },
+    {
+      "word": "to",
+      "start": 82.77999877929688,
+      "end": 82.9800033569336
+    },
+    {
+      "word": "do",
+      "start": 82.9800033569336,
+      "end": 83.12000274658203
+    },
+    {
+      "word": "this",
+      "start": 83.12000274658203,
+      "end": 83.41999816894531
+    },
+    {
+      "word": "is",
+      "start": 83.41999816894531,
+      "end": 83.72000122070312
+    },
+    {
+      "word": "to",
+      "start": 83.72000122070312,
+      "end": 83.9800033569336
+    },
+    {
+      "word": "build",
+      "start": 83.9800033569336,
+      "end": 84.13999938964844
+    },
+    {
+      "word": "an",
+      "start": 84.13999938964844,
+      "end": 84.62000274658203
+    },
+    {
+      "word": "image",
+      "start": 84.62000274658203,
+      "end": 84.62000274658203
+    },
+    {
+      "word": "tag",
+      "start": 85.27999877929688,
+      "end": 85.27999877929688
+    },
+    {
+      "word": "it",
+      "start": 85.27999877929688,
+      "end": 85.55999755859375
+    },
+    {
+      "word": "and",
+      "start": 85.66000366210938,
+      "end": 85.81999969482422
+    },
+    {
+      "word": "then",
+      "start": 85.81999969482422,
+      "end": 86.0999984741211
+    },
+    {
+      "word": "push",
+      "start": 86.0999984741211,
+      "end": 86.30000305175781
+    },
+    {
+      "word": "it",
+      "start": 86.30000305175781,
+      "end": 86.5999984741211
+    },
+    {
+      "word": "to",
+      "start": 86.5999984741211,
+      "end": 86.80000305175781
+    },
+    {
+      "word": "some",
+      "start": 86.80000305175781,
+      "end": 87.23999786376953
+    },
+    {
+      "word": "container",
+      "start": 87.23999786376953,
+      "end": 87.5199966430664
+    },
+    {
+      "word": "registry",
+      "start": 87.5199966430664,
+      "end": 88.0999984741211
+    },
+    {
+      "word": "Then",
+      "start": 88.69999694824219,
+      "end": 89.08000183105469
+    },
+    {
+      "word": "you",
+      "start": 89.08000183105469,
+      "end": 89.36000061035156
+    },
+    {
+      "word": "would",
+      "start": 89.36000061035156,
+      "end": 89.5999984741211
+    },
+    {
+      "word": "create",
+      "start": 89.5999984741211,
+      "end": 89.94000244140625
+    },
+    {
+      "word": "your",
+      "start": 89.94000244140625,
+      "end": 90.27999877929688
+    },
+    {
+      "word": "Kubernetes",
+      "start": 90.27999877929688,
+      "end": 90.69999694824219
+    },
+    {
+      "word": "deployment",
+      "start": 90.69999694824219,
+      "end": 91.26000213623047
+    },
+    {
+      "word": "YAML",
+      "start": 91.26000213623047,
+      "end": 91.76000213623047
+    },
+    {
+      "word": "and",
+      "start": 91.76000213623047,
+      "end": 92.0199966430664
+    },
+    {
+      "word": "then",
+      "start": 92.0199966430664,
+      "end": 92.68000030517578
+    },
+    {
+      "word": "reference",
+      "start": 92.68000030517578,
+      "end": 92.68000030517578
+    },
+    {
+      "word": "the",
+      "start": 92.68000030517578,
+      "end": 92.9800033569336
+    },
+    {
+      "word": "image",
+      "start": 92.9800033569336,
+      "end": 93.18000030517578
+    },
+    {
+      "word": "in",
+      "start": 93.18000030517578,
+      "end": 93.45999908447266
+    },
+    {
+      "word": "there",
+      "start": 93.45999908447266,
+      "end": 94.0199966430664
+    },
+    {
+      "word": "Doing",
+      "start": 94.54000091552734,
+      "end": 94.76000213623047
+    },
+    {
+      "word": "this",
+      "start": 94.76000213623047,
+      "end": 95.08000183105469
+    },
+    {
+      "word": "locally",
+      "start": 95.08000183105469,
+      "end": 95.44000244140625
+    },
+    {
+      "word": "is",
+      "start": 95.44000244140625,
+      "end": 95.72000122070312
+    },
+    {
+      "word": "kind",
+      "start": 95.72000122070312,
+      "end": 95.9000015258789
+    },
+    {
+      "word": "of",
+      "start": 95.9000015258789,
+      "end": 96.4800033569336
+    },
+    {
+      "word": "awkward",
+      "start": 96.4800033569336,
+      "end": 96.4800033569336
+    },
+    {
+      "word": "Ideally",
+      "start": 96.94000244140625,
+      "end": 97.23999786376953
+    },
+    {
+      "word": "you",
+      "start": 97.23999786376953,
+      "end": 97.63999938964844
+    },
+    {
+      "word": "want",
+      "start": 97.63999938964844,
+      "end": 97.87999725341797
+    },
+    {
+      "word": "to",
+      "start": 97.87999725341797,
+      "end": 98.12000274658203
+    },
+    {
+      "word": "build",
+      "start": 98.12000274658203,
+      "end": 98.31999969482422
+    },
+    {
+      "word": "and",
+      "start": 98.31999969482422,
+      "end": 98.55999755859375
+    },
+    {
+      "word": "tag",
+      "start": 98.55999755859375,
+      "end": 98.73999786376953
+    },
+    {
+      "word": "the",
+      "start": 98.73999786376953,
+      "end": 99.23999786376953
+    },
+    {
+      "word": "image",
+      "start": 99.23999786376953,
+      "end": 99.23999786376953
+    },
+    {
+      "word": "and",
+      "start": 99.23999786376953,
+      "end": 99.45999908447266
+    },
+    {
+      "word": "then",
+      "start": 99.45999908447266,
+      "end": 99.63999938964844
+    },
+    {
+      "word": "have",
+      "start": 99.63999938964844,
+      "end": 99.9800033569336
+    },
+    {
+      "word": "that",
+      "start": 99.9800033569336,
+      "end": 100.4800033569336
+    },
+    {
+      "word": "image",
+      "start": 100.4800033569336,
+      "end": 100.4800033569336
+    },
+    {
+      "word": "immediately",
+      "start": 100.4800033569336,
+      "end": 101.23999786376953
+    },
+    {
+      "word": "available",
+      "start": 101.23999786376953,
+      "end": 101.76000213623047
+    },
+    {
+      "word": "for",
+      "start": 101.76000213623047,
+      "end": 102.16000366210938
+    },
+    {
+      "word": "use",
+      "start": 102.16000366210938,
+      "end": 102.5
+    },
+    {
+      "word": "inside",
+      "start": 102.5,
+      "end": 102.9800033569336
+    },
+    {
+      "word": "the",
+      "start": 102.9800033569336,
+      "end": 103.55999755859375
+    },
+    {
+      "word": "cluster",
+      "start": 103.55999755859375,
+      "end": 103.55999755859375
+    },
+    {
+      "word": "So",
+      "start": 103.95999908447266,
+      "end": 104.22000122070312
+    },
+    {
+      "word": "skipping",
+      "start": 104.22000122070312,
+      "end": 104.45999908447266
+    },
+    {
+      "word": "push",
+      "start": 104.45999908447266,
+      "end": 104.91999816894531
+    },
+    {
+      "word": "and",
+      "start": 104.91999816894531,
+      "end": 105.23999786376953
+    },
+    {
+      "word": "pull",
+      "start": 105.23999786376953,
+      "end": 105.45999908447266
+    },
+    {
+      "word": "from",
+      "start": 105.45999908447266,
+      "end": 105.69999694824219
+    },
+    {
+      "word": "a",
+      "start": 105.69999694824219,
+      "end": 106.16000366210938
+    },
+    {
+      "word": "Docker",
+      "start": 106.16000366210938,
+      "end": 106.16000366210938
+    },
+    {
+      "word": "registry",
+      "start": 106.16000366210938,
+      "end": 106.72000122070312
+    },
+    {
+      "word": "Kind",
+      "start": 108.0,
+      "end": 108.0
+    },
+    {
+      "word": "supports",
+      "start": 108.0,
+      "end": 108.54000091552734
+    },
+    {
+      "word": "this",
+      "start": 108.54000091552734,
+      "end": 108.86000061035156
+    },
+    {
+      "word": "workflow",
+      "start": 108.86000061035156,
+      "end": 109.22000122070312
+    },
+    {
+      "word": "and",
+      "start": 109.22000122070312,
+      "end": 109.41999816894531
+    },
+    {
+      "word": "it's",
+      "start": 109.41999816894531,
+      "end": 109.55999755859375
+    },
+    {
+      "word": "very",
+      "start": 109.55999755859375,
+      "end": 109.9000015258789
+    },
+    {
+      "word": "easy",
+      "start": 109.9000015258789,
+      "end": 110.08000183105469
+    },
+    {
+      "word": "to",
+      "start": 110.08000183105469,
+      "end": 110.33999633789062
+    },
+    {
+      "word": "use",
+      "start": 110.33999633789062,
+      "end": 110.5999984741211
+    },
+    {
+      "word": "There's",
+      "start": 110.72000122070312,
+      "end": 111.08000183105469
+    },
+    {
+      "word": "a",
+      "start": 111.08000183105469,
+      "end": 111.45999908447266
+    },
+    {
+      "word": "command",
+      "start": 111.45999908447266,
+      "end": 111.73999786376953
+    },
+    {
+      "word": "called",
+      "start": 111.73999786376953,
+      "end": 112.30000305175781
+    },
+    {
+      "word": "kind",
+      "start": 112.30000305175781,
+      "end": 112.76000213623047
+    },
+    {
+      "word": "load",
+      "start": 112.76000213623047,
+      "end": 113.18000030517578
+    },
+    {
+      "word": "Docker",
+      "start": 113.18000030517578,
+      "end": 113.63999938964844
+    },
+    {
+      "word": "image",
+      "start": 113.63999938964844,
+      "end": 114.05999755859375
+    },
+    {
+      "word": "that",
+      "start": 114.05999755859375,
+      "end": 114.58000183105469
+    },
+    {
+      "word": "will",
+      "start": 114.58000183105469,
+      "end": 114.86000061035156
+    },
+    {
+      "word": "load",
+      "start": 114.86000061035156,
+      "end": 115.13999938964844
+    },
+    {
+      "word": "a",
+      "start": 115.13999938964844,
+      "end": 116.05999755859375
+    },
+    {
+      "word": "locally",
+      "start": 116.05999755859375,
+      "end": 116.05999755859375
+    },
+    {
+      "word": "built",
+      "start": 116.05999755859375,
+      "end": 116.37999725341797
+    },
+    {
+      "word": "Docker",
+      "start": 116.37999725341797,
+      "end": 116.73999786376953
+    },
+    {
+      "word": "image",
+      "start": 116.73999786376953,
+      "end": 117.0999984741211
+    },
+    {
+      "word": "into",
+      "start": 117.0999984741211,
+      "end": 117.62000274658203
+    },
+    {
+      "word": "the",
+      "start": 117.62000274658203,
+      "end": 117.91999816894531
+    },
+    {
+      "word": "cluster",
+      "start": 117.91999816894531,
+      "end": 118.19999694824219
+    },
+    {
+      "word": "I",
+      "start": 118.27999877929688,
+      "end": 118.4800033569336
+    },
+    {
+      "word": "have",
+      "start": 118.4800033569336,
+      "end": 118.66000366210938
+    },
+    {
+      "word": "a",
+      "start": 118.66000366210938,
+      "end": 119.08000183105469
+    },
+    {
+      "word": "Docker",
+      "start": 119.08000183105469,
+      "end": 119.08000183105469
+    },
+    {
+      "word": "image",
+      "start": 119.08000183105469,
+      "end": 119.4000015258789
+    },
+    {
+      "word": "I",
+      "start": 119.4000015258789,
+      "end": 119.66000366210938
+    },
+    {
+      "word": "build",
+      "start": 119.66000366210938,
+      "end": 119.86000061035156
+    },
+    {
+      "word": "locally",
+      "start": 119.86000061035156,
+      "end": 120.27999877929688
+    },
+    {
+      "word": "called",
+      "start": 120.27999877929688,
+      "end": 120.73999786376953
+    },
+    {
+      "word": "my",
+      "start": 120.73999786376953,
+      "end": 121.16000366210938
+    },
+    {
+      "word": "app",
+      "start": 121.16000366210938,
+      "end": 121.5199966430664
+    },
+    {
+      "word": "with",
+      "start": 121.5199966430664,
+      "end": 121.81999969482422
+    },
+    {
+      "word": "a",
+      "start": 121.81999969482422,
+      "end": 122.27999877929688
+    },
+    {
+      "word": "tag",
+      "start": 122.27999877929688,
+      "end": 122.30000305175781
+    },
+    {
+      "word": "1",
+      "start": 122.30000305175781,
+      "end": 122.68000030517578
+    },
+    {
+      "word": "0",
+      "start": 122.68000030517578,
+      "end": 123.18000030517578
+    },
+    {
+      "word": "0",
+      "start": 123.18000030517578,
+      "end": 123.91999816894531
+    },
+    {
+      "word": "Instead",
+      "start": 123.91999816894531,
+      "end": 124.41999816894531
+    },
+    {
+      "word": "of",
+      "start": 124.41999816894531,
+      "end": 124.68000030517578
+    },
+    {
+      "word": "pushing",
+      "start": 124.68000030517578,
+      "end": 124.87999725341797
+    },
+    {
+      "word": "this",
+      "start": 124.87999725341797,
+      "end": 125.19999694824219
+    },
+    {
+      "word": "image",
+      "start": 125.19999694824219,
+      "end": 125.41999816894531
+    },
+    {
+      "word": "to",
+      "start": 125.41999816894531,
+      "end": 125.5999984741211
+    },
+    {
+      "word": "a",
+      "start": 125.5999984741211,
+      "end": 126.0999984741211
+    },
+    {
+      "word": "registry",
+      "start": 126.0999984741211,
+      "end": 126.0999984741211
+    },
+    {
+      "word": "I",
+      "start": 126.0999984741211,
+      "end": 126.4000015258789
+    },
+    {
+      "word": "can",
+      "start": 126.4000015258789,
+      "end": 126.62000274658203
+    },
+    {
+      "word": "load",
+      "start": 126.62000274658203,
+      "end": 126.81999969482422
+    },
+    {
+      "word": "it",
+      "start": 126.81999969482422,
+      "end": 127.54000091552734
+    },
+    {
+      "word": "directly",
+      "start": 127.54000091552734,
+      "end": 127.54000091552734
+    },
+    {
+      "word": "into",
+      "start": 127.54000091552734,
+      "end": 127.83999633789062
+    },
+    {
+      "word": "the",
+      "start": 127.83999633789062,
+      "end": 128.39999389648438
+    },
+    {
+      "word": "cluster",
+      "start": 128.39999389648438,
+      "end": 128.39999389648438
+    },
+    {
+      "word": "nodes",
+      "start": 128.39999389648438,
+      "end": 128.83999633789062
+    },
+    {
+      "word": "by",
+      "start": 128.83999633789062,
+      "end": 129.17999267578125
+    },
+    {
+      "word": "running",
+      "start": 129.17999267578125,
+      "end": 129.55999755859375
+    },
+    {
+      "word": "kind",
+      "start": 129.55999755859375,
+      "end": 130.1199951171875
+    },
+    {
+      "word": "load",
+      "start": 130.1199951171875,
+      "end": 130.5399932861328
+    },
+    {
+      "word": "Docker",
+      "start": 130.5399932861328,
+      "end": 130.97999572753906
+    },
+    {
+      "word": "image",
+      "start": 130.97999572753906,
+      "end": 131.4600067138672
+    },
+    {
+      "word": "and",
+      "start": 131.4600067138672,
+      "end": 131.9199981689453
+    },
+    {
+      "word": "then",
+      "start": 131.9199981689453,
+      "end": 132.13999938964844
+    },
+    {
+      "word": "the",
+      "start": 132.13999938964844,
+      "end": 132.52000427246094
+    },
+    {
+      "word": "name",
+      "start": 132.52000427246094,
+      "end": 132.67999267578125
+    },
+    {
+      "word": "and",
+      "start": 132.67999267578125,
+      "end": 133.02000427246094
+    },
+    {
+      "word": "the",
+      "start": 133.02000427246094,
+      "end": 133.1999969482422
+    },
+    {
+      "word": "tag",
+      "start": 133.1999969482422,
+      "end": 133.5
+    },
+    {
+      "word": "of",
+      "start": 133.5,
+      "end": 133.8800048828125
+    },
+    {
+      "word": "the",
+      "start": 133.8800048828125,
+      "end": 133.9199981689453
+    },
+    {
+      "word": "image",
+      "start": 133.9199981689453,
+      "end": 134.24000549316406
+    },
+    {
+      "word": "If",
+      "start": 135.17999267578125,
+      "end": 135.1999969482422
+    },
+    {
+      "word": "I",
+      "start": 135.1999969482422,
+      "end": 135.47999572753906
+    },
+    {
+      "word": "run",
+      "start": 135.47999572753906,
+      "end": 135.5
+    },
+    {
+      "word": "the",
+      "start": 135.5,
+      "end": 135.74000549316406
+    },
+    {
+      "word": "command",
+      "start": 135.74000549316406,
+      "end": 136.16000366210938
+    },
+    {
+      "word": "kind",
+      "start": 136.97999572753906,
+      "end": 136.97999572753906
+    },
+    {
+      "word": "will",
+      "start": 136.97999572753906,
+      "end": 137.22000122070312
+    },
+    {
+      "word": "take",
+      "start": 137.22000122070312,
+      "end": 137.63999938964844
+    },
+    {
+      "word": "the",
+      "start": 137.63999938964844,
+      "end": 137.8800048828125
+    },
+    {
+      "word": "image",
+      "start": 137.8800048828125,
+      "end": 138.0800018310547
+    },
+    {
+      "word": "and",
+      "start": 138.0800018310547,
+      "end": 138.44000244140625
+    },
+    {
+      "word": "load",
+      "start": 138.44000244140625,
+      "end": 138.67999267578125
+    },
+    {
+      "word": "it",
+      "start": 138.67999267578125,
+      "end": 139.0399932861328
+    },
+    {
+      "word": "onto",
+      "start": 139.0399932861328,
+      "end": 139.17999267578125
+    },
+    {
+      "word": "all",
+      "start": 139.17999267578125,
+      "end": 139.6999969482422
+    },
+    {
+      "word": "nodes",
+      "start": 139.6999969482422,
+      "end": 139.97999572753906
+    },
+    {
+      "word": "in",
+      "start": 139.97999572753906,
+      "end": 140.3800048828125
+    },
+    {
+      "word": "the",
+      "start": 140.3800048828125,
+      "end": 140.47999572753906
+    },
+    {
+      "word": "cluster",
+      "start": 140.47999572753906,
+      "end": 140.86000061035156
+    },
+    {
+      "word": "Once",
+      "start": 141.24000549316406,
+      "end": 141.33999633789062
+    },
+    {
+      "word": "the",
+      "start": 141.33999633789062,
+      "end": 141.75999450683594
+    },
+    {
+      "word": "images",
+      "start": 141.75999450683594,
+      "end": 141.75999450683594
+    },
+    {
+      "word": "are",
+      "start": 141.75999450683594,
+      "end": 142.27999877929688
+    },
+    {
+      "word": "loaded",
+      "start": 142.27999877929688,
+      "end": 142.27999877929688
+    },
+    {
+      "word": "on",
+      "start": 142.27999877929688,
+      "end": 142.60000610351562
+    },
+    {
+      "word": "the",
+      "start": 142.60000610351562,
+      "end": 143.0399932861328
+    },
+    {
+      "word": "nodes",
+      "start": 143.0399932861328,
+      "end": 143.0399932861328
+    },
+    {
+      "word": "I",
+      "start": 143.16000366210938,
+      "end": 143.24000549316406
+    },
+    {
+      "word": "can",
+      "start": 143.24000549316406,
+      "end": 143.5399932861328
+    },
+    {
+      "word": "refer",
+      "start": 143.5399932861328,
+      "end": 143.75999450683594
+    },
+    {
+      "word": "to",
+      "start": 143.75999450683594,
+      "end": 143.97999572753906
+    },
+    {
+      "word": "the",
+      "start": 143.97999572753906,
+      "end": 144.1999969482422
+    },
+    {
+      "word": "image",
+      "start": 144.1999969482422,
+      "end": 144.33999633789062
+    },
+    {
+      "word": "with",
+      "start": 144.33999633789062,
+      "end": 144.55999755859375
+    },
+    {
+      "word": "the",
+      "start": 144.55999755859375,
+      "end": 144.94000244140625
+    },
+    {
+      "word": "same",
+      "start": 144.94000244140625,
+      "end": 145.16000366210938
+    },
+    {
+      "word": "name",
+      "start": 145.16000366210938,
+      "end": 145.5800018310547
+    },
+    {
+      "word": "in",
+      "start": 145.5800018310547,
+      "end": 145.8800048828125
+    },
+    {
+      "word": "the",
+      "start": 145.8800048828125,
+      "end": 146.1199951171875
+    },
+    {
+      "word": "Kubernetes",
+      "start": 146.1199951171875,
+      "end": 146.3800048828125
+    },
+    {
+      "word": "deployment",
+      "start": 146.3800048828125,
+      "end": 146.86000061035156
+    },
+    {
+      "word": "YAML",
+      "start": 146.86000061035156,
+      "end": 147.24000549316406
+    },
+    {
+      "word": "and",
+      "start": 147.24000549316406,
+      "end": 147.6199951171875
+    },
+    {
+      "word": "everything",
+      "start": 147.6199951171875,
+      "end": 148.0399932861328
+    },
+    {
+      "word": "will",
+      "start": 148.0399932861328,
+      "end": 148.32000732421875
+    },
+    {
+      "word": "work",
+      "start": 148.32000732421875,
+      "end": 148.55999755859375
+    },
+    {
+      "word": "fine",
+      "start": 148.55999755859375,
+      "end": 148.9600067138672
+    },
+    {
+      "word": "Metal",
+      "start": 149.22000122070312,
+      "end": 149.39999389648438
+    },
+    {
+      "word": "lb",
+      "start": 149.39999389648438,
+      "end": 149.75999450683594
+    },
+    {
+      "word": "is",
+      "start": 149.75999450683594,
+      "end": 149.9600067138672
+    },
+    {
+      "word": "a",
+      "start": 149.9600067138672,
+      "end": 150.25999450683594
+    },
+    {
+      "word": "load",
+      "start": 150.25999450683594,
+      "end": 150.5
+    },
+    {
+      "word": "balancer",
+      "start": 150.5,
+      "end": 150.75999450683594
+    },
+    {
+      "word": "implementation",
+      "start": 150.75999450683594,
+      "end": 151.52000427246094
+    },
+    {
+      "word": "for",
+      "start": 151.52000427246094,
+      "end": 151.94000244140625
+    },
+    {
+      "word": "bare",
+      "start": 151.94000244140625,
+      "end": 152.27999877929688
+    },
+    {
+      "word": "metal",
+      "start": 152.27999877929688,
+      "end": 152.4600067138672
+    },
+    {
+      "word": "Kubernetes",
+      "start": 152.4600067138672,
+      "end": 152.97999572753906
+    },
+    {
+      "word": "clusters",
+      "start": 152.97999572753906,
+      "end": 153.52000427246094
+    },
+    {
+      "word": "and",
+      "start": 153.52000427246094,
+      "end": 153.97999572753906
+    },
+    {
+      "word": "it",
+      "start": 153.97999572753906,
+      "end": 154.3000030517578
+    },
+    {
+      "word": "gives",
+      "start": 154.3000030517578,
+      "end": 154.33999633789062
+    },
+    {
+      "word": "us",
+      "start": 154.33999633789062,
+      "end": 154.63999938964844
+    },
+    {
+      "word": "a",
+      "start": 154.63999938964844,
+      "end": 154.67999267578125
+    },
+    {
+      "word": "nice",
+      "start": 154.67999267578125,
+      "end": 155.10000610351562
+    },
+    {
+      "word": "way",
+      "start": 155.10000610351562,
+      "end": 155.32000732421875
+    },
+    {
+      "word": "to",
+      "start": 155.32000732421875,
+      "end": 155.63999938964844
+    },
+    {
+      "word": "expose",
+      "start": 155.63999938964844,
+      "end": 155.94000244140625
+    },
+    {
+      "word": "services",
+      "start": 155.94000244140625,
+      "end": 156.4600067138672
+    },
+    {
+      "word": "of",
+      "start": 156.4600067138672,
+      "end": 156.74000549316406
+    },
+    {
+      "word": "type",
+      "start": 156.74000549316406,
+      "end": 157.0800018310547
+    },
+    {
+      "word": "load",
+      "start": 157.0800018310547,
+      "end": 157.3800048828125
+    },
+    {
+      "word": "balancer",
+      "start": 157.3800048828125,
+      "end": 157.82000732421875
+    },
+    {
+      "word": "No",
+      "start": 158.3800048828125,
+      "end": 158.52000427246094
+    },
+    {
+      "word": "more",
+      "start": 158.52000427246094,
+      "end": 158.83999633789062
+    },
+    {
+      "word": "pending",
+      "start": 158.83999633789062,
+      "end": 159.1999969482422
+    },
+    {
+      "word": "state",
+      "start": 159.1999969482422,
+      "end": 159.67999267578125
+    },
+    {
+      "word": "for",
+      "start": 159.67999267578125,
+      "end": 159.83999633789062
+    },
+    {
+      "word": "those",
+      "start": 159.83999633789062,
+      "end": 160.1999969482422
+    },
+    {
+      "word": "services",
+      "start": 160.1999969482422,
+      "end": 160.77999877929688
+    },
+    {
+      "word": "Metal",
+      "start": 161.55999755859375,
+      "end": 161.66000366210938
+    },
+    {
+      "word": "lb",
+      "start": 161.66000366210938,
+      "end": 162.0
+    },
+    {
+      "word": "is",
+      "start": 162.0,
+      "end": 162.17999267578125
+    },
+    {
+      "word": "not",
+      "start": 162.17999267578125,
+      "end": 162.63999938964844
+    },
+    {
+      "word": "part",
+      "start": 162.63999938964844,
+      "end": 162.8800048828125
+    },
+    {
+      "word": "of",
+      "start": 162.8800048828125,
+      "end": 163.10000610351562
+    },
+    {
+      "word": "kind",
+      "start": 163.10000610351562,
+      "end": 163.27999877929688
+    },
+    {
+      "word": "but",
+      "start": 163.27999877929688,
+      "end": 163.5
+    },
+    {
+      "word": "it's",
+      "start": 163.5,
+      "end": 163.67999267578125
+    },
+    {
+      "word": "very",
+      "start": 163.67999267578125,
+      "end": 163.9600067138672
+    },
+    {
+      "word": "easy",
+      "start": 163.9600067138672,
+      "end": 164.16000366210938
+    },
+    {
+      "word": "to",
+      "start": 164.16000366210938,
+      "end": 164.47999572753906
+    },
+    {
+      "word": "install",
+      "start": 164.47999572753906,
+      "end": 164.74000549316406
+    },
+    {
+      "word": "and",
+      "start": 164.74000549316406,
+      "end": 165.13999938964844
+    },
+    {
+      "word": "use",
+      "start": 165.13999938964844,
+      "end": 165.36000061035156
+    },
+    {
+      "word": "it",
+      "start": 165.36000061035156,
+      "end": 165.60000610351562
+    },
+    {
+      "word": "Once",
+      "start": 165.86000061035156,
+      "end": 165.9199981689453
+    },
+    {
+      "word": "you",
+      "start": 165.9199981689453,
+      "end": 166.0800018310547
+    },
+    {
+      "word": "have",
+      "start": 166.0800018310547,
+      "end": 166.32000732421875
+    },
+    {
+      "word": "your",
+      "start": 166.32000732421875,
+      "end": 166.55999755859375
+    },
+    {
+      "word": "kind",
+      "start": 166.55999755859375,
+      "end": 166.82000732421875
+    },
+    {
+      "word": "cluster",
+      "start": 166.82000732421875,
+      "end": 167.17999267578125
+    },
+    {
+      "word": "running",
+      "start": 167.17999267578125,
+      "end": 167.55999755859375
+    },
+    {
+      "word": "you",
+      "start": 167.77999877929688,
+      "end": 167.8000030517578
+    },
+    {
+      "word": "can",
+      "start": 167.8000030517578,
+      "end": 168.16000366210938
+    },
+    {
+      "word": "install",
+      "start": 168.16000366210938,
+      "end": 168.39999389648438
+    },
+    {
+      "word": "metal",
+      "start": 168.39999389648438,
+      "end": 168.72000122070312
+    },
+    {
+      "word": "lb",
+      "start": 168.72000122070312,
+      "end": 169.32000732421875
+    },
+    {
+      "word": "using",
+      "start": 169.32000732421875,
+      "end": 169.74000549316406
+    },
+    {
+      "word": "helm",
+      "start": 169.74000549316406,
+      "end": 170.0
+    },
+    {
+      "word": "So",
+      "start": 170.5800018310547,
+      "end": 170.6999969482422
+    },
+    {
+      "word": "you",
+      "start": 170.6999969482422,
+      "end": 170.89999389648438
+    },
+    {
+      "word": "run",
+      "start": 170.89999389648438,
+      "end": 171.1199951171875
+    },
+    {
+      "word": "helm",
+      "start": 171.1199951171875,
+      "end": 171.52000427246094
+    },
+    {
+      "word": "upgrade",
+      "start": 171.52000427246094,
+      "end": 172.0399932861328
+    },
+    {
+      "word": "install",
+      "start": 172.0399932861328,
+      "end": 172.5399932861328
+    },
+    {
+      "word": "provide",
+      "start": 172.5399932861328,
+      "end": 173.0399932861328
+    },
+    {
+      "word": "the",
+      "start": 173.0399932861328,
+      "end": 173.39999389648438
+    },
+    {
+      "word": "namespace",
+      "start": 173.39999389648438,
+      "end": 173.86000061035156
+    },
+    {
+      "word": "name",
+      "start": 173.86000061035156,
+      "end": 174.1999969482422
+    },
+    {
+      "word": "point",
+      "start": 174.1999969482422,
+      "end": 174.89999389648438
+    },
+    {
+      "word": "to",
+      "start": 174.89999389648438,
+      "end": 175.1199951171875
+    },
+    {
+      "word": "the",
+      "start": 175.1199951171875,
+      "end": 175.33999633789062
+    },
+    {
+      "word": "metal",
+      "start": 175.33999633789062,
+      "end": 175.55999755859375
+    },
+    {
+      "word": "lb",
+      "start": 175.55999755859375,
+      "end": 176.05999755859375
+    },
+    {
+      "word": "repo",
+      "start": 176.05999755859375,
+      "end": 176.3800048828125
+    },
+    {
+      "word": "and",
+      "start": 176.3800048828125,
+      "end": 176.83999633789062
+    },
+    {
+      "word": "then",
+      "start": 176.83999633789062,
+      "end": 177.0
+    },
+    {
+      "word": "the",
+      "start": 177.0,
+      "end": 177.4199981689453
+    },
+    {
+      "word": "name",
+      "start": 177.4199981689453,
+      "end": 177.44000244140625
+    },
+    {
+      "word": "of",
+      "start": 177.44000244140625,
+      "end": 177.63999938964844
+    },
+    {
+      "word": "the",
+      "start": 177.63999938964844,
+      "end": 182.9600067138672
+    },
+    {
+      "word": "controller",
+      "start": 182.9600067138672,
+      "end": 183.47999572753906
+    },
+    {
+      "word": "running",
+      "start": 183.47999572753906,
+      "end": 183.89999389648438
+    },
+    {
+      "word": "in",
+      "start": 183.89999389648438,
+      "end": 184.0800018310547
+    },
+    {
+      "word": "our",
+      "start": 184.0800018310547,
+      "end": 184.25999450683594
+    },
+    {
+      "word": "cluster",
+      "start": 184.25999450683594,
+      "end": 184.5800018310547
+    },
+    {
+      "word": "Next",
+      "start": 184.9199981689453,
+      "end": 185.63999938964844
+    },
+    {
+      "word": "we",
+      "start": 185.63999938964844,
+      "end": 185.86000061035156
+    },
+    {
+      "word": "need",
+      "start": 185.86000061035156,
+      "end": 186.05999755859375
+    },
+    {
+      "word": "to",
+      "start": 186.05999755859375,
+      "end": 186.3000030517578
+    },
+    {
+      "word": "tell",
+      "start": 186.3000030517578,
+      "end": 186.5
+    },
+    {
+      "word": "metal",
+      "start": 186.5,
+      "end": 186.75999450683594
+    },
+    {
+      "word": "lb",
+      "start": 186.75999450683594,
+      "end": 187.1999969482422
+    },
+    {
+      "word": "the",
+      "start": 187.1999969482422,
+      "end": 187.52000427246094
+    },
+    {
+      "word": "IP",
+      "start": 187.52000427246094,
+      "end": 187.83999633789062
+    },
+    {
+      "word": "range",
+      "start": 187.83999633789062,
+      "end": 188.44000244140625
+    },
+    {
+      "word": "from",
+      "start": 188.44000244140625,
+      "end": 188.75999450683594
+    },
+    {
+      "word": "which",
+      "start": 188.75999450683594,
+      "end": 189.0
+    },
+    {
+      "word": "it",
+      "start": 189.0,
+      "end": 189.24000549316406
+    },
+    {
+      "word": "can",
+      "start": 189.24000549316406,
+      "end": 189.4600067138672
+    },
+    {
+      "word": "take",
+      "start": 189.4600067138672,
+      "end": 189.77999877929688
+    },
+    {
+      "word": "IP",
+      "start": 189.77999877929688,
+      "end": 190.1999969482422
+    },
+    {
+      "word": "addresses",
+      "start": 190.1999969482422,
+      "end": 190.6199951171875
+    },
+    {
+      "word": "for",
+      "start": 190.6199951171875,
+      "end": 191.0399932861328
+    },
+    {
+      "word": "those",
+      "start": 191.0399932861328,
+      "end": 191.33999633789062
+    },
+    {
+      "word": "load",
+      "start": 191.33999633789062,
+      "end": 191.67999267578125
+    },
+    {
+      "word": "balancer",
+      "start": 191.67999267578125,
+      "end": 192.0800018310547
+    },
+    {
+      "word": "services",
+      "start": 192.0800018310547,
+      "end": 192.8000030517578
+    },
+    {
+      "word": "We",
+      "start": 192.8000030517578,
+      "end": 193.52000427246094
+    },
+    {
+      "word": "can",
+      "start": 193.52000427246094,
+      "end": 193.74000549316406
+    },
+    {
+      "word": "do",
+      "start": 193.74000549316406,
+      "end": 193.86000061035156
+    },
+    {
+      "word": "that",
+      "start": 193.86000061035156,
+      "end": 194.13999938964844
+    },
+    {
+      "word": "with",
+      "start": 194.13999938964844,
+      "end": 194.32000732421875
+    },
+    {
+      "word": "the",
+      "start": 194.32000732421875,
+      "end": 194.5399932861328
+    },
+    {
+      "word": "IP",
+      "start": 194.5399932861328,
+      "end": 194.83999633789062
+    },
+    {
+      "word": "address",
+      "start": 194.83999633789062,
+      "end": 195.24000549316406
+    },
+    {
+      "word": "pool",
+      "start": 195.24000549316406,
+      "end": 195.52000427246094
+    },
+    {
+      "word": "resource",
+      "start": 195.52000427246094,
+      "end": 196.05999755859375
+    },
+    {
+      "word": "but",
+      "start": 196.05999755859375,
+      "end": 196.4600067138672
+    },
+    {
+      "word": "first",
+      "start": 196.4600067138672,
+      "end": 196.82000732421875
+    },
+    {
+      "word": "we",
+      "start": 196.82000732421875,
+      "end": 197.05999755859375
+    },
+    {
+      "word": "have",
+      "start": 197.05999755859375,
+      "end": 197.33999633789062
+    },
+    {
+      "word": "to",
+      "start": 197.33999633789062,
+      "end": 197.8000030517578
+    },
+    {
+      "word": "figure",
+      "start": 197.8000030517578,
+      "end": 197.8000030517578
+    },
+    {
+      "word": "out",
+      "start": 197.8000030517578,
+      "end": 198.05999755859375
+    },
+    {
+      "word": "the",
+      "start": 198.05999755859375,
+      "end": 198.27999877929688
+    },
+    {
+      "word": "IP",
+      "start": 198.27999877929688,
+      "end": 198.6199951171875
+    },
+    {
+      "word": "range",
+      "start": 198.6199951171875,
+      "end": 199.0399932861328
+    },
+    {
+      "word": "that",
+      "start": 199.0399932861328,
+      "end": 199.24000549316406
+    },
+    {
+      "word": "we",
+      "start": 199.24000549316406,
+      "end": 199.33999633789062
+    },
+    {
+      "word": "can",
+      "start": 199.33999633789062,
+      "end": 199.60000610351562
+    },
+    {
+      "word": "use",
+      "start": 199.60000610351562,
+      "end": 199.94000244140625
+    },
+    {
+      "word": "Since",
+      "start": 200.44000244140625,
+      "end": 200.44000244140625
+    },
+    {
+      "word": "kind",
+      "start": 200.44000244140625,
+      "end": 200.66000366210938
+    },
+    {
+      "word": "is",
+      "start": 200.66000366210938,
+      "end": 200.94000244140625
+    },
+    {
+      "word": "using",
+      "start": 200.94000244140625,
+      "end": 201.27999877929688
+    },
+    {
+      "word": "Docker",
+      "start": 201.27999877929688,
+      "end": 201.55999755859375
+    },
+    {
+      "word": "to",
+      "start": 201.55999755859375,
+      "end": 201.89999389648438
+    },
+    {
+      "word": "run",
+      "start": 201.89999389648438,
+      "end": 202.0399932861328
+    },
+    {
+      "word": "the",
+      "start": 202.0399932861328,
+      "end": 202.55999755859375
+    },
+    {
+      "word": "cluster",
+      "start": 202.55999755859375,
+      "end": 202.55999755859375
+    },
+    {
+      "word": "it",
+      "start": 202.6999969482422,
+      "end": 203.05999755859375
+    },
+    {
+      "word": "created",
+      "start": 203.05999755859375,
+      "end": 203.36000061035156
+    },
+    {
+      "word": "a",
+      "start": 203.36000061035156,
+      "end": 204.1199951171875
+    },
+    {
+      "word": "network",
+      "start": 204.1199951171875,
+      "end": 204.13999938964844
+    },
+    {
+      "word": "called",
+      "start": 204.13999938964844,
+      "end": 204.6199951171875
+    },
+    {
+      "word": "kind",
+      "start": 204.6199951171875,
+      "end": 205.13999938964844
+    },
+    {
+      "word": "We",
+      "start": 205.22000122070312,
+      "end": 205.67999267578125
+    },
+    {
+      "word": "can",
+      "start": 205.67999267578125,
+      "end": 205.8800048828125
+    },
+    {
+      "word": "use",
+      "start": 205.8800048828125,
+      "end": 206.0800018310547
+    },
+    {
+      "word": "the",
+      "start": 206.0800018310547,
+      "end": 206.36000061035156
+    },
+    {
+      "word": "Docker",
+      "start": 206.36000061035156,
+      "end": 206.6199951171875
+    },
+    {
+      "word": "network",
+      "start": 206.6199951171875,
+      "end": 207.0800018310547
+    },
+    {
+      "word": "inspect",
+      "start": 207.0800018310547,
+      "end": 207.5399932861328
+    },
+    {
+      "word": "command",
+      "start": 207.5399932861328,
+      "end": 208.0399932861328
+    },
+    {
+      "word": "to",
+      "start": 208.0399932861328,
+      "end": 208.3000030517578
+    },
+    {
+      "word": "get",
+      "start": 208.3000030517578,
+      "end": 208.5
+    },
+    {
+      "word": "the",
+      "start": 208.5,
+      "end": 212.94000244140625
+    },
+    {
+      "word": "kind",
+      "start": 213.52000427246094,
+      "end": 214.27999877929688
+    },
+    {
+      "word": "command",
+      "start": 214.27999877929688,
+      "end": 214.72000122070312
+    },
+    {
+      "word": "and",
+      "start": 214.72000122070312,
+      "end": 215.0399932861328
+    },
+    {
+      "word": "then",
+      "start": 215.0399932861328,
+      "end": 215.36000061035156
+    },
+    {
+      "word": "we'll",
+      "start": 215.36000061035156,
+      "end": 215.66000366210938
+    },
+    {
+      "word": "get",
+      "start": 215.66000366210938,
+      "end": 215.83999633789062
+    },
+    {
+      "word": "the",
+      "start": 215.83999633789062,
+      "end": 216.24000549316406
+    },
+    {
+      "word": "subnet",
+      "start": 216.24000549316406,
+      "end": 216.5399932861328
+    },
+    {
+      "word": "out",
+      "start": 216.5399932861328,
+      "end": 217.0399932861328
+    },
+    {
+      "word": "from",
+      "start": 217.0399932861328,
+      "end": 217.3000030517578
+    },
+    {
+      "word": "the",
+      "start": 217.3000030517578,
+      "end": 217.6199951171875
+    },
+    {
+      "word": "IP",
+      "start": 217.6199951171875,
+      "end": 217.82000732421875
+    },
+    {
+      "word": "address",
+      "start": 217.82000732421875,
+      "end": 218.17999267578125
+    },
+    {
+      "word": "management",
+      "start": 218.17999267578125,
+      "end": 218.8000030517578
+    },
+    {
+      "word": "section",
+      "start": 218.8000030517578,
+      "end": 219.25999450683594
+    },
+    {
+      "word": "This",
+      "start": 219.94000244140625,
+      "end": 220.63999938964844
+    },
+    {
+      "word": "subset",
+      "start": 220.63999938964844,
+      "end": 221.10000610351562
+    },
+    {
+      "word": "range",
+      "start": 221.10000610351562,
+      "end": 221.6199951171875
+    },
+    {
+      "word": "gives",
+      "start": 221.6199951171875,
+      "end": 222.0800018310547
+    },
+    {
+      "word": "us",
+      "start": 222.0800018310547,
+      "end": 222.52000427246094
+    },
+    {
+      "word": "65",
+      "start": 222.52000427246094,
+      "end": 223.05999755859375
+    },
+    {
+      "word": "000",
+      "start": 223.05999755859375,
+      "end": 223.5800018310547
+    },
+    {
+      "word": "IP",
+      "start": 223.5800018310547,
+      "end": 223.9600067138672
+    },
+    {
+      "word": "addresses",
+      "start": 223.9600067138672,
+      "end": 224.24000549316406
+    },
+    {
+      "word": "we",
+      "start": 224.24000549316406,
+      "end": 224.6199951171875
+    },
+    {
+      "word": "can",
+      "start": 224.6199951171875,
+      "end": 224.86000061035156
+    },
+    {
+      "word": "choose",
+      "start": 224.86000061035156,
+      "end": 225.0800018310547
+    },
+    {
+      "word": "from",
+      "start": 225.0800018310547,
+      "end": 225.5
+    },
+    {
+      "word": "We",
+      "start": 225.97999572753906,
+      "end": 226.0
+    },
+    {
+      "word": "can",
+      "start": 226.0,
+      "end": 226.16000366210938
+    },
+    {
+      "word": "pick",
+      "start": 226.16000366210938,
+      "end": 226.32000732421875
+    },
+    {
+      "word": "a",
+      "start": 226.32000732421875,
+      "end": 226.74000549316406
+    },
+    {
+      "word": "range",
+      "start": 226.74000549316406,
+      "end": 226.74000549316406
+    },
+    {
+      "word": "let's",
+      "start": 226.74000549316406,
+      "end": 227.0399932861328
+    },
+    {
+      "word": "say",
+      "start": 227.0399932861328,
+      "end": 227.3000030517578
+    },
+    {
+      "word": "172",
+      "start": 227.3000030517578,
+      "end": 228.22000122070312
+    },
+    {
+      "word": "18",
+      "start": 228.22000122070312,
+      "end": 228.74000549316406
+    },
+    {
+      "word": "250",
+      "start": 228.74000549316406,
+      "end": 229.4199981689453
+    },
+    {
+      "word": "500",
+      "start": 229.4199981689453,
+      "end": 230.1199951171875
+    },
+    {
+      "word": "to",
+      "start": 230.1199951171875,
+      "end": 230.97999572753906
+    },
+    {
+      "word": "200",
+      "start": 230.97999572753906,
+      "end": 231.5800018310547
+    },
+    {
+      "word": "and",
+      "start": 231.5800018310547,
+      "end": 232.05999755859375
+    },
+    {
+      "word": "that",
+      "start": 232.05999755859375,
+      "end": 232.36000061035156
+    },
+    {
+      "word": "will",
+      "start": 232.36000061035156,
+      "end": 232.5
+    },
+    {
+      "word": "be",
+      "start": 232.5,
+      "end": 232.63999938964844
+    },
+    {
+      "word": "our",
+      "start": 232.63999938964844,
+      "end": 233.1199951171875
+    },
+    {
+      "word": "IP",
+      "start": 233.1199951171875,
+      "end": 233.32000732421875
+    },
+    {
+      "word": "address",
+      "start": 233.32000732421875,
+      "end": 233.72000122070312
+    },
+    {
+      "word": "pool",
+      "start": 233.72000122070312,
+      "end": 234.10000610351562
+    },
+    {
+      "word": "for",
+      "start": 234.10000610351562,
+      "end": 234.60000610351562
+    },
+    {
+      "word": "the",
+      "start": 234.60000610351562,
+      "end": 234.8000030517578
+    },
+    {
+      "word": "load",
+      "start": 234.8000030517578,
+      "end": 235.16000366210938
+    },
+    {
+      "word": "balancer",
+      "start": 235.16000366210938,
+      "end": 235.52000427246094
+    },
+    {
+      "word": "services",
+      "start": 235.52000427246094,
+      "end": 236.17999267578125
+    },
+    {
+      "word": "We",
+      "start": 236.83999633789062,
+      "end": 237.36000061035156
+    },
+    {
+      "word": "can",
+      "start": 237.36000061035156,
+      "end": 237.6199951171875
+    },
+    {
+      "word": "apply",
+      "start": 237.6199951171875,
+      "end": 237.9199981689453
+    },
+    {
+      "word": "the",
+      "start": 237.9199981689453,
+      "end": 238.24000549316406
+    },
+    {
+      "word": "IP",
+      "start": 238.24000549316406,
+      "end": 238.44000244140625
+    },
+    {
+      "word": "address",
+      "start": 238.44000244140625,
+      "end": 238.8000030517578
+    },
+    {
+      "word": "pool",
+      "start": 238.8000030517578,
+      "end": 239.1199951171875
+    },
+    {
+      "word": "resource",
+      "start": 239.1199951171875,
+      "end": 239.6199951171875
+    },
+    {
+      "word": "and",
+      "start": 239.6199951171875,
+      "end": 239.86000061035156
+    },
+    {
+      "word": "the",
+      "start": 239.86000061035156,
+      "end": 240.10000610351562
+    },
+    {
+      "word": "L2",
+      "start": 240.10000610351562,
+      "end": 240.4199981689453
+    },
+    {
+      "word": "advertisement",
+      "start": 240.4199981689453,
+      "end": 241.0399932861328
+    },
+    {
+      "word": "resource",
+      "start": 241.0399932861328,
+      "end": 241.55999755859375
+    },
+    {
+      "word": "and",
+      "start": 241.55999755859375,
+      "end": 242.05999755859375
+    },
+    {
+      "word": "then",
+      "start": 242.05999755859375,
+      "end": 242.36000061035156
+    },
+    {
+      "word": "we",
+      "start": 242.36000061035156,
+      "end": 242.55999755859375
+    },
+    {
+      "word": "can",
+      "start": 242.55999755859375,
+      "end": 242.83999633789062
+    },
+    {
+      "word": "a",
+      "start": 242.83999633789062,
+      "end": 243.27999877929688
+    },
+    {
+      "word": "Kubernetes",
+      "start": 243.27999877929688,
+      "end": 243.67999267578125
+    },
+    {
+      "word": "service",
+      "start": 243.67999267578125,
+      "end": 244.25999450683594
+    },
+    {
+      "word": "of",
+      "start": 244.25999450683594,
+      "end": 244.3800048828125
+    },
+    {
+      "word": "type",
+      "start": 244.3800048828125,
+      "end": 244.77999877929688
+    },
+    {
+      "word": "load",
+      "start": 244.77999877929688,
+      "end": 245.02000427246094
+    },
+    {
+      "word": "balancer",
+      "start": 245.02000427246094,
+      "end": 245.39999389648438
+    },
+    {
+      "word": "and",
+      "start": 245.39999389648438,
+      "end": 245.97999572753906
+    },
+    {
+      "word": "you'll",
+      "start": 245.97999572753906,
+      "end": 246.27999877929688
+    },
+    {
+      "word": "notice",
+      "start": 246.27999877929688,
+      "end": 246.63999938964844
+    },
+    {
+      "word": "that",
+      "start": 246.63999938964844,
+      "end": 246.8800048828125
+    },
+    {
+      "word": "we",
+      "start": 246.8800048828125,
+      "end": 247.0399932861328
+    },
+    {
+      "word": "get",
+      "start": 247.0399932861328,
+      "end": 247.22000122070312
+    },
+    {
+      "word": "an",
+      "start": 247.22000122070312,
+      "end": 247.5
+    },
+    {
+      "word": "external",
+      "start": 247.5,
+      "end": 247.9199981689453
+    },
+    {
+      "word": "IP",
+      "start": 247.9199981689453,
+      "end": 248.44000244140625
+    },
+    {
+      "word": "address",
+      "start": 248.44000244140625,
+      "end": 248.83999633789062
+    },
+    {
+      "word": "assigned",
+      "start": 248.83999633789062,
+      "end": 249.5
+    },
+    {
+      "word": "to",
+      "start": 249.5,
+      "end": 249.6999969482422
+    },
+    {
+      "word": "the",
+      "start": 249.6999969482422,
+      "end": 249.97999572753906
+    },
+    {
+      "word": "service",
+      "start": 249.97999572753906,
+      "end": 250.39999389648438
+    },
+    {
+      "word": "Another",
+      "start": 250.8800048828125,
+      "end": 251.0
+    },
+    {
+      "word": "option",
+      "start": 251.0,
+      "end": 251.47999572753906
+    },
+    {
+      "word": "we",
+      "start": 251.47999572753906,
+      "end": 251.77999877929688
+    },
+    {
+      "word": "have",
+      "start": 251.77999877929688,
+      "end": 252.13999938964844
+    },
+    {
+      "word": "for",
+      "start": 252.13999938964844,
+      "end": 252.4600067138672
+    },
+    {
+      "word": "using",
+      "start": 252.4600067138672,
+      "end": 252.75999450683594
+    },
+    {
+      "word": "local",
+      "start": 252.75999450683594,
+      "end": 253.17999267578125
+    },
+    {
+      "word": "Docker",
+      "start": 253.17999267578125,
+      "end": 253.47999572753906
+    },
+    {
+      "word": "images",
+      "start": 253.47999572753906,
+      "end": 253.77999877929688
+    },
+    {
+      "word": "is",
+      "start": 253.77999877929688,
+      "end": 254.22000122070312
+    },
+    {
+      "word": "to",
+      "start": 254.22000122070312,
+      "end": 254.5
+    },
+    {
+      "word": "run",
+      "start": 254.5,
+      "end": 254.72000122070312
+    },
+    {
+      "word": "a",
+      "start": 254.72000122070312,
+      "end": 255.17999267578125
+    },
+    {
+      "word": "local",
+      "start": 255.17999267578125,
+      "end": 255.55999755859375
+    },
+    {
+      "word": "image",
+      "start": 255.55999755859375,
+      "end": 255.9199981689453
+    },
+    {
+      "word": "registry",
+      "start": 255.9199981689453,
+      "end": 256.3599853515625
+    },
+    {
+      "word": "and",
+      "start": 256.3599853515625,
+      "end": 256.94000244140625
+    },
+    {
+      "word": "then",
+      "start": 256.94000244140625,
+      "end": 257.260009765625
+    },
+    {
+      "word": "push",
+      "start": 257.260009765625,
+      "end": 257.5
+    },
+    {
+      "word": "the",
+      "start": 257.5,
+      "end": 257.94000244140625
+    },
+    {
+      "word": "images",
+      "start": 257.94000244140625,
+      "end": 257.94000244140625
+    },
+    {
+      "word": "to",
+      "start": 257.94000244140625,
+      "end": 258.29998779296875
+    },
+    {
+      "word": "dad",
+      "start": 258.29998779296875,
+      "end": 258.6199951171875
+    },
+    {
+      "word": "registry",
+      "start": 258.6199951171875,
+      "end": 259.1400146484375
+    },
+    {
+      "word": "instead",
+      "start": 259.1400146484375,
+      "end": 259.67999267578125
+    },
+    {
+      "word": "of",
+      "start": 259.67999267578125,
+      "end": 260.0
+    },
+    {
+      "word": "loading",
+      "start": 260.0,
+      "end": 260.239990234375
+    },
+    {
+      "word": "them",
+      "start": 260.239990234375,
+      "end": 260.55999755859375
+    },
+    {
+      "word": "onto",
+      "start": 260.55999755859375,
+      "end": 260.82000732421875
+    },
+    {
+      "word": "the",
+      "start": 260.82000732421875,
+      "end": 261.1000061035156
+    },
+    {
+      "word": "nodes",
+      "start": 261.1000061035156,
+      "end": 261.4200134277344
+    },
+    {
+      "word": "The",
+      "start": 261.4200134277344,
+      "end": 261.82000732421875
+    },
+    {
+      "word": "website",
+      "start": 261.82000732421875,
+      "end": 262.1199951171875
+    },
+    {
+      "word": "has",
+      "start": 262.1199951171875,
+      "end": 262.4200134277344
+    },
+    {
+      "word": "a",
+      "start": 262.4200134277344,
+      "end": 262.5799865722656
+    },
+    {
+      "word": "nice",
+      "start": 262.5799865722656,
+      "end": 262.8399963378906
+    },
+    {
+      "word": "script",
+      "start": 262.8399963378906,
+      "end": 263.1199951171875
+    },
+    {
+      "word": "that",
+      "start": 263.1199951171875,
+      "end": 263.4800109863281
+    },
+    {
+      "word": "will",
+      "start": 263.4800109863281,
+      "end": 263.7200012207031
+    },
+    {
+      "word": "create",
+      "start": 263.7200012207031,
+      "end": 263.9800109863281
+    },
+    {
+      "word": "a",
+      "start": 263.9800109863281,
+      "end": 264.260009765625
+    },
+    {
+      "word": "local",
+      "start": 264.260009765625,
+      "end": 264.5
+    },
+    {
+      "word": "registry",
+      "start": 264.5,
+      "end": 264.8999938964844
+    },
+    {
+      "word": "and",
+      "start": 264.8999938964844,
+      "end": 265.2799987792969
+    },
+    {
+      "word": "then",
+      "start": 265.2799987792969,
+      "end": 265.5199890136719
+    },
+    {
+      "word": "configure",
+      "start": 265.5199890136719,
+      "end": 265.94000244140625
+    },
+    {
+      "word": "the",
+      "start": 265.94000244140625,
+      "end": 266.5199890136719
+    },
+    {
+      "word": "nodes",
+      "start": 266.5199890136719,
+      "end": 266.5199890136719
+    },
+    {
+      "word": "to",
+      "start": 266.5199890136719,
+      "end": 266.8599853515625
+    },
+    {
+      "word": "use",
+      "start": 266.8599853515625,
+      "end": 267.1000061035156
+    },
+    {
+      "word": "it",
+      "start": 267.1000061035156,
+      "end": 267.4599914550781
+    },
+    {
+      "word": "First",
+      "start": 267.4599914550781,
+      "end": 267.9599914550781
+    },
+    {
+      "word": "it",
+      "start": 267.9599914550781,
+      "end": 268.32000732421875
+    },
+    {
+      "word": "runs",
+      "start": 268.32000732421875,
+      "end": 268.6199951171875
+    },
+    {
+      "word": "the",
+      "start": 268.6199951171875,
+      "end": 268.8999938964844
+    },
+    {
+      "word": "registry",
+      "start": 268.8999938964844,
+      "end": 269.260009765625
+    },
+    {
+      "word": "image",
+      "start": 269.260009765625,
+      "end": 269.67999267578125
+    },
+    {
+      "word": "as",
+      "start": 269.67999267578125,
+      "end": 269.9599914550781
+    },
+    {
+      "word": "a",
+      "start": 269.9599914550781,
+      "end": 270.3800048828125
+    },
+    {
+      "word": "Docker",
+      "start": 270.3800048828125,
+      "end": 270.4800109863281
+    },
+    {
+      "word": "container",
+      "start": 270.4800109863281,
+      "end": 271.0
+    },
+    {
+      "word": "then",
+      "start": 271.0,
+      "end": 271.9599914550781
+    },
+    {
+      "word": "it",
+      "start": 271.9599914550781,
+      "end": 272.4599914550781
+    },
+    {
+      "word": "creates",
+      "start": 272.4599914550781,
+      "end": 272.67999267578125
+    },
+    {
+      "word": "the",
+      "start": 272.67999267578125,
+      "end": 272.94000244140625
+    },
+    {
+      "word": "cluster",
+      "start": 272.94000244140625,
+      "end": 273.29998779296875
+    },
+    {
+      "word": "the",
+      "start": 273.29998779296875,
+      "end": 273.739990234375
+    },
+    {
+      "word": "configuration",
+      "start": 273.739990234375,
+      "end": 274.2799987792969
+    },
+    {
+      "word": "for",
+      "start": 274.2799987792969,
+      "end": 274.6600036621094
+    },
+    {
+      "word": "the",
+      "start": 274.6600036621094,
+      "end": 274.79998779296875
+    },
+    {
+      "word": "cluster",
+      "start": 274.79998779296875,
+      "end": 275.05999755859375
+    },
+    {
+      "word": "includes",
+      "start": 275.05999755859375,
+      "end": 275.4599914550781
+    },
+    {
+      "word": "a",
+      "start": 275.4599914550781,
+      "end": 275.739990234375
+    },
+    {
+      "word": "patch",
+      "start": 275.739990234375,
+      "end": 276.0400085449219
+    },
+    {
+      "word": "that's",
+      "start": 276.0400085449219,
+      "end": 276.5
+    },
+    {
+      "word": "necessary",
+      "start": 276.5,
+      "end": 276.8999938964844
+    },
+    {
+      "word": "for",
+      "start": 276.8999938964844,
+      "end": 277.6000061035156
+    },
+    {
+      "word": "the",
+      "start": 277.6000061035156,
+      "end": 277.82000732421875
+    },
+    {
+      "word": "nodes",
+      "start": 277.82000732421875,
+      "end": 278.1199951171875
+    },
+    {
+      "word": "to",
+      "start": 278.1199951171875,
+      "end": 278.4200134277344
+    },
+    {
+      "word": "use",
+      "start": 278.4200134277344,
+      "end": 278.6000061035156
+    },
+    {
+      "word": "the",
+      "start": 278.6000061035156,
+      "end": 278.8999938964844
+    },
+    {
+      "word": "registry",
+      "start": 278.8999938964844,
+      "end": 279.1600036621094
+    },
+    {
+      "word": "then",
+      "start": 279.1600036621094,
+      "end": 280.0400085449219
+    },
+    {
+      "word": "it",
+      "start": 280.0400085449219,
+      "end": 280.55999755859375
+    },
+    {
+      "word": "creates",
+      "start": 280.55999755859375,
+      "end": 280.55999755859375
+    },
+    {
+      "word": "the",
+      "start": 280.55999755859375,
+      "end": 280.8599853515625
+    },
+    {
+      "word": "configuration",
+      "start": 280.8599853515625,
+      "end": 281.1600036621094
+    },
+    {
+      "word": "on",
+      "start": 281.1600036621094,
+      "end": 281.70001220703125
+    },
+    {
+      "word": "each",
+      "start": 281.70001220703125,
+      "end": 281.8399963378906
+    },
+    {
+      "word": "node",
+      "start": 281.8399963378906,
+      "end": 282.1600036621094
+    },
+    {
+      "word": "then",
+      "start": 282.1600036621094,
+      "end": 282.5400085449219
+    },
+    {
+      "word": "maps",
+      "start": 282.5400085449219,
+      "end": 282.8599853515625
+    },
+    {
+      "word": "local",
+      "start": 282.8599853515625,
+      "end": 283.5
+    },
+    {
+      "word": "host",
+      "start": 283.5,
+      "end": 283.8399963378906
+    },
+    {
+      "word": "to",
+      "start": 283.8399963378906,
+      "end": 284.239990234375
+    },
+    {
+      "word": "the",
+      "start": 284.239990234375,
+      "end": 284.3800048828125
+    },
+    {
+      "word": "actual",
+      "start": 284.3800048828125,
+      "end": 284.94000244140625
+    },
+    {
+      "word": "registry",
+      "start": 284.94000244140625,
+      "end": 285.2799987792969
+    },
+    {
+      "word": "container",
+      "start": 285.2799987792969,
+      "end": 285.79998779296875
+    },
+    {
+      "word": "name",
+      "start": 285.79998779296875,
+      "end": 286.2200012207031
+    },
+    {
+      "word": "and",
+      "start": 286.2200012207031,
+      "end": 286.79998779296875
+    },
+    {
+      "word": "finally",
+      "start": 286.79998779296875,
+      "end": 287.239990234375
+    },
+    {
+      "word": "it",
+      "start": 287.239990234375,
+      "end": 287.7799987792969
+    },
+    {
+      "word": "connects",
+      "start": 287.7799987792969,
+      "end": 288.05999755859375
+    },
+    {
+      "word": "the",
+      "start": 288.05999755859375,
+      "end": 288.44000244140625
+    },
+    {
+      "word": "registry",
+      "start": 288.44000244140625,
+      "end": 288.7200012207031
+    },
+    {
+      "word": "container",
+      "start": 288.7200012207031,
+      "end": 289.1600036621094
+    },
+    {
+      "word": "to",
+      "start": 289.1600036621094,
+      "end": 289.4800109863281
+    },
+    {
+      "word": "the",
+      "start": 289.4800109863281,
+      "end": 289.8599853515625
+    },
+    {
+      "word": "cluster",
+      "start": 289.8599853515625,
+      "end": 290.0
+    },
+    {
+      "word": "network",
+      "start": 290.0,
+      "end": 290.6000061035156
+    },
+    {
+      "word": "With",
+      "start": 290.6199951171875,
+      "end": 291.0
+    },
+    {
+      "word": "the",
+      "start": 291.0,
+      "end": 291.5
+    },
+    {
+      "word": "cluster",
+      "start": 291.5,
+      "end": 291.5
+    },
+    {
+      "word": "and",
+      "start": 291.5,
+      "end": 292.1400146484375
+    },
+    {
+      "word": "registry",
+      "start": 292.1400146484375,
+      "end": 292.1400146484375
+    },
+    {
+      "word": "running",
+      "start": 292.1400146484375,
+      "end": 292.5799865722656
+    },
+    {
+      "word": "we",
+      "start": 292.5799865722656,
+      "end": 292.8800048828125
+    },
+    {
+      "word": "can",
+      "start": 292.8800048828125,
+      "end": 293.0799865722656
+    },
+    {
+      "word": "either",
+      "start": 293.0799865722656,
+      "end": 293.3399963378906
+    },
+    {
+      "word": "build",
+      "start": 293.3399963378906,
+      "end": 293.79998779296875
+    },
+    {
+      "word": "or",
+      "start": 293.79998779296875,
+      "end": 294.05999755859375
+    },
+    {
+      "word": "pull",
+      "start": 294.05999755859375,
+      "end": 294.3399963378906
+    },
+    {
+      "word": "an",
+      "start": 294.3399963378906,
+      "end": 294.79998779296875
+    },
+    {
+      "word": "image",
+      "start": 294.79998779296875,
+      "end": 294.79998779296875
+    },
+    {
+      "word": "tag",
+      "start": 295.0199890136719,
+      "end": 295.6600036621094
+    },
+    {
+      "word": "it",
+      "start": 295.6600036621094,
+      "end": 295.9200134277344
+    },
+    {
+      "word": "using",
+      "start": 295.9200134277344,
+      "end": 296.239990234375
+    },
+    {
+      "word": "the",
+      "start": 296.239990234375,
+      "end": 296.5
+    },
+    {
+      "word": "local",
+      "start": 296.5,
+      "end": 296.8999938964844
+    },
+    {
+      "word": "registry",
+      "start": 296.8999938964844,
+      "end": 297.3399963378906
+    },
+    {
+      "word": "name",
+      "start": 297.3399963378906,
+      "end": 297.79998779296875
+    },
+    {
+      "word": "which",
+      "start": 297.79998779296875,
+      "end": 298.05999755859375
+    },
+    {
+      "word": "is",
+      "start": 298.05999755859375,
+      "end": 298.3800048828125
+    },
+    {
+      "word": "local",
+      "start": 298.3800048828125,
+      "end": 298.67999267578125
+    },
+    {
+      "word": "host",
+      "start": 298.67999267578125,
+      "end": 299.0
+    },
+    {
+      "word": "5001",
+      "start": 299.0,
+      "end": 300.2799987792969
+    },
+    {
+      "word": "push",
+      "start": 301.1400146484375,
+      "end": 301.20001220703125
+    },
+    {
+      "word": "it",
+      "start": 301.20001220703125,
+      "end": 301.3999938964844
+    },
+    {
+      "word": "to",
+      "start": 301.3999938964844,
+      "end": 301.5199890136719
+    },
+    {
+      "word": "the",
+      "start": 301.5199890136719,
+      "end": 301.79998779296875
+    },
+    {
+      "word": "registry",
+      "start": 301.79998779296875,
+      "end": 302.1199951171875
+    },
+    {
+      "word": "and",
+      "start": 302.1199951171875,
+      "end": 302.4800109863281
+    },
+    {
+      "word": "then",
+      "start": 302.4800109863281,
+      "end": 302.7799987792969
+    },
+    {
+      "word": "finally",
+      "start": 302.7799987792969,
+      "end": 303.2200012207031
+    },
+    {
+      "word": "refer",
+      "start": 303.2200012207031,
+      "end": 303.7799987792969
+    },
+    {
+      "word": "to",
+      "start": 303.7799987792969,
+      "end": 304.0799865722656
+    },
+    {
+      "word": "the",
+      "start": 304.0799865722656,
+      "end": 304.3599853515625
+    },
+    {
+      "word": "images",
+      "start": 304.3599853515625,
+      "end": 304.760009765625
+    },
+    {
+      "word": "in",
+      "start": 304.760009765625,
+      "end": 305.1400146484375
+    },
+    {
+      "word": "our",
+      "start": 305.1400146484375,
+      "end": 305.3999938964844
+    },
+    {
+      "word": "Kubernetes",
+      "start": 305.3999938964844,
+      "end": 305.79998779296875
+    },
+    {
+      "word": "deployment",
+      "start": 305.79998779296875,
+      "end": 306.3599853515625
+    },
+    {
+      "word": "yaml",
+      "start": 306.3599853515625,
+      "end": 306.94000244140625
+    },
+    {
+      "word": "files",
+      "start": 306.94000244140625,
+      "end": 307.3399963378906
+    }
+  ]
+}

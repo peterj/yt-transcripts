@@ -1,0 +1,5 @@
+audio
+transcripts
+.venv
+.env
+/**/node_modules
